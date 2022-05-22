@@ -54,7 +54,7 @@ ROOT_URLCONF = 'main.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['frontend/dist'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,9 +115,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 's/'
+STATIC_ROOT = '/var/static/'
+STATICFILES_DIRS = [
+    'frontend/dist/frontend/'
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js", True)
