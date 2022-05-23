@@ -15,11 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.contrib.auth.views import LoginView
+from django.views.decorators.csrf import ensure_csrf_cookie
+from main.views import LoginAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('account/login/', ensure_csrf_cookie(LoginAPIView.as_view())),
+    path('account/login', ensure_csrf_cookie(LoginAPIView.as_view())),
     path('', TemplateView.as_view(template_name="frontend/index.html"))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
