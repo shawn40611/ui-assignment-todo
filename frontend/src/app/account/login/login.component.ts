@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Form, FormBuilder, FormGroup } from '@angular/forms';
-import { HttpXsrfTokenExtractor } from '@angular/common/http'
+import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ApiService } from 'src/app/api.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css', '../share.css']
 })
-export class LoginComponent implements OnInit{
-  xsrfToken = this.tokenExtractor.getToken();
+export class LoginComponent {
   loginForm = this.formBuilder.group({ 
       'username': '',
       'password': '',
@@ -18,18 +17,16 @@ export class LoginComponent implements OnInit{
 
 
   constructor(
-    private tokenExtractor: HttpXsrfTokenExtractor,
     private formBuilder: FormBuilder,
-    private api: ApiService
+    private api: ApiService,
+    private router: Router
     ) { }
-
-  ngOnInit(): void {
-      this.xsrfToken = this.tokenExtractor.getToken();
-  }
 
   onSubmit() {
     let observer = {
-      error: (error: Error) => {console.log('error')}
+      complete: () => { this.router.navigate(['todo']); },
+      error: (error: Error) => {console.log(error)},
+      next: () => {debugger;}
     }
     this.api.login(this.loginForm).subscribe(observer);
   }

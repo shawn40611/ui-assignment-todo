@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework'
+    'rest_framework',
+    'django_filters',
+    'todo',
+    'account'
 ]
 
 MIDDLEWARE = [
@@ -131,6 +134,11 @@ CSRF_USE_SESSIONS = False
 CSRF_COOKIE_HTTPONLY = False  # this is the default, and should be kept this way
 CSRF_COOKIE_NAME = 'XSRF-TOKEN'
 CSRF_HEADER_NAME = 'HTTP_X_XSRF_TOKEN'
+
+
+LOGIN_URL = '/account/login/'
+LOGIN_REDIRECT_URL = '/todo/'
+LOGOUT_REDIRECT_URL = ''
 
 if DEBUG:
     import mimetypes

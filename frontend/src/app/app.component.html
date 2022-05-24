@@ -1,4 +1,17 @@
 <mat-toolbar [color]="'primary'">
-  <span>ToDo</span>
+  <mat-toolbar-row>
+    <span>ToDo</span>
+    <span class="spacer"></span>
+    <div *ngIf="api.isLogin()">
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>menu</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="logout()">Log out</button>
+      </mat-menu>
+    </div>
+
+  </mat-toolbar-row>
 </mat-toolbar>
 <router-outlet></router-outlet>
+<notifier-container></notifier-container>

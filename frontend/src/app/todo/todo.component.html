@@ -1,0 +1,45 @@
+<div fxLayout="row">
+    <mat-tab-group fxFlex="70" (selectedTabChange)="switchTab($event)">
+        <mat-tab *ngFor="let tab of tabs" [label]="tab">
+            <div *ngIf="todoList.length == 0"> 
+                <h2 *ngIf="tab == 'All'">You don't have any todo list, create one!</h2>
+                <h2 *ngIf="tab == 'Done'">You don't have any todo is done!</h2>
+                <h2 *ngIf="tab == 'Not Done'">You don't have any todo is not done!</h2>
+            </div>
+            <div *ngIf="todoList.length > 0" fxLayout="column" fxLayoutAlign="space-around end"> 
+                <button mat-raised-button *ngIf="tab=='Not Done'"(click)="markAsDone(list)">Mark as Done</button>
+                <mat-selection-list #list fxFlexAlign="stretch" [multiple]="tab == 'Not Done'"> 
+                    <mat-list-option *ngFor="let todo of todoList" (click)="updateSelected(todo)" [value]="todo.id">
+                        <span fxLayout="row" fxLayoutAlign="start center">
+                            <mat-icon *ngIf="todo.is_done" class="success">check</mat-icon>
+                            <mat-icon *ngIf="!todo.is_done" color="error">close</mat-icon>
+                            &nbsp;
+                            {{todo.title}}
+                        </span>
+                    </mat-list-option>
+                </mat-selection-list>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+    <div *ngIf="selectedToDo" fxLayout="column" fxLayoutAlign="center center" fxFlex="30" class="form-area">
+        <form [formGroup]="updateTodoForm" >
+            <mat-form-field class="full-width" appearance="fill">
+                <mat-label>Title</mat-label>
+                <input matInput formControlName="title"/>
+            </mat-form-field>
+
+            <mat-form-field class="full-width" appearance="fill">
+                <mat-label>Detail</mat-label>
+                <textarea matInput type="textarea" formControlName="detail"></textarea>
+            </mat-form-field>
+            <p><mat-checkbox formControlName="is_done">Done</mat-checkbox></p>
+            <div fxLayout="row" fxLayoutAlign="space-around center">
+                <button mat-raised-button color="primary" (click)="updateToDo(selectedToDo)">Update</button>
+                <button mat-raised-button color="error">Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+<button mat-fab color="primary" class="float-right" id="add-btn" (click)="openFormDialog()">
+    <mat-icon>add</mat-icon>
+</button>

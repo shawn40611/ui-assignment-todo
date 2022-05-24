@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutAlign="center center" class="form-page">
-    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form class="account-form" [formGroup]="signupForm" (ngSubmit)="onSubmit()" fxLayout="column" fxLayoutAlign="center">
         <mat-form-field class="full-width" appearance="fill">
             <mat-label>Username</mat-label>
         <input matInput formControlName="username"/>
@@ -9,12 +9,6 @@
             <mat-label>Password</mat-label>
             <input matInput formControlName="password" type="password"/>
         </mat-form-field>
-        <div fxLayout="row" fxLayoutAlign="center center">
-            <button mat-raised-button type="submit">登入</button>
-            &nbsp;
-            or
-            &nbsp;
-            <a routerLink="../signup">Sign Up</a>
-        </div>
+        <button mat-raised-button type="submit">SignUp</button>
     </form>
 </div>
