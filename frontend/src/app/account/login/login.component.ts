@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { ApiService } from 'src/app/api.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { ApiService } from 'src/app/api.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css', '../share.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   loginForm = this.formBuilder.group({ 
       'username': '',
       'password': '',
@@ -19,8 +20,15 @@ export class LoginComponent {
   constructor(
     private formBuilder: FormBuilder,
     private api: ApiService,
+    private cookie: CookieService,
     private router: Router
     ) { }
+
+  ngOnInit(): void {
+    if(this.cookie.check('is_login')) {
+      this.router.navigate(['todo']);
+    }
+  }
 
   onSubmit() {
     let observer = {

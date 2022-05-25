@@ -18,22 +18,8 @@ interface isLoginResponse  {
   providedIn: 'root'
 })
 export class ApiService {
-  _isLogin: boolean|null = null;
 
   constructor(private http: HttpClient) { }
-
-  isLogin() {
-    if (this._isLogin == null) {
-      let url = "/api/account/is_login/"
-      this.http.get<isLoginResponse>(url).subscribe(
-        result => {
-          this._isLogin = result.is_login;
-          return this._isLogin;
-        }
-      )
-    }
-    return this._isLogin;
-  }
 
   login(loginForm: FormGroup) {
     let formData = new FormData();
@@ -42,7 +28,6 @@ export class ApiService {
     let url = "/api/account/login/"
     return this.http.post(url, formData).pipe(
       map((result: any) => {
-        this._isLogin = result.status == 200;
         return result
       })
     )
@@ -52,7 +37,6 @@ export class ApiService {
     let url = "/api/account/logout/"
     return this.http.get(url).pipe(
       map((result: any) => {
-        this._isLogin = result.status == 200? false: this._isLogin;
         return result
       })
     )

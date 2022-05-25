@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { ApiService } from './api.service';
 
 @Component({
@@ -10,7 +11,8 @@ import { ApiService } from './api.service';
 export class AppComponent {
   title = 'ToDo';
   constructor(
-    public api:ApiService,
+    public cookie: CookieService,
+    private api: ApiService,
     private router: Router
     ) {}
   logout() {

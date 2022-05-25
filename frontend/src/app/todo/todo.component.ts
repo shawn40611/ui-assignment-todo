@@ -6,6 +6,8 @@ import { ToDo } from '../api.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { FormBuilder } from '@angular/forms';
 import { NotifierService } from 'angular-notifier';
+import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Component({
@@ -30,12 +32,17 @@ export class TodoComponent implements OnInit {
 
   constructor(
     private api: ApiService,
+    private cookie: CookieService,
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
-    private notifier: NotifierService
+    private notifier: NotifierService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+    if (!this.cookie.check('is_login')) {
+      this.router.navigate(['account', 'login']);
+    }
     this.refresh();
   }
 

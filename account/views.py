@@ -1,3 +1,4 @@
+from urllib import response
 from django.http import HttpResponse
 from account.serializers import UserSerializer
 from django.contrib.auth.models import User
@@ -13,7 +14,7 @@ class LoginAPIView(LoginView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        return HttpResponse(status=200)
+        return JsonResponse({}, status=200)
 
     def form_invalid(self, form) :
         return JsonResponse({
@@ -33,4 +34,6 @@ class IsLoginView(APIView):
 class LogoutAPIView(APIView):
     def get(self, request, *args, **kwargs):
         logout(request)
-        return HttpResponse(status=200)
+        response = JsonResponse({}, status=200)
+        response.delete_cookie('is_login')
+        return response 
