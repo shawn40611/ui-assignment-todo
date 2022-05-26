@@ -10,3 +10,4 @@ class ToDo(models.Model):
     detail = models.CharField(max_length=150)
     is_done = models.BooleanField(default=False)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    coworkers = models.ManyToManyField(User, related_name='coworked_todos')

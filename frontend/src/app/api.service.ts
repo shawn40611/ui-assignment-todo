@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpParamsOptions } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
-import { Observable, map } from 'rxjs';
+import { Observable, map, observable } from 'rxjs';
 
 
 export interface ToDo {
@@ -11,13 +11,12 @@ export interface ToDo {
   is_done: boolean,
 }
 
-interface isLoginResponse  {
-  is_login: boolean
-}
 @Injectable({
   providedIn: 'root'
 })
+
 export class ApiService {
+  currentSocket:any = null;
 
   constructor(private http: HttpClient) { }
 
@@ -80,5 +79,39 @@ export class ApiService {
     return this.http.patch(url, {'ids': ids});
   }
 
+  connectUpdateToDoGroup(id: string, onmessage: any) {
+    if (this.currentSocket != null) {
+      this.currentSocket.close();
+    }
+    let url = 'ws://'+ location.host +`/ws/todo/${id}/`;
+    this.currentSocket = new WebSocket(url);
+    this.currentSocket.onmessage = onmessage;
+  }
+
+  sendToDoGroup(message: {}) {
+    let subscriber;
+    if (this.currentSocket.readyState == WebSocket.OPEN) {
+      subscriber = (observer: any) => {
+        this.currentSocket.send(JSON.stringify(message));
+        observer.next();
+      }
+    } else {
+      subscriber = (observer: any) => {
+        this.currentSocket.onopen = () => {
+          this.currentSocket.send(JSON.stringify(message));
+          observer.next('done')
+
+        };
+      }
+    }
+    return new Observable(subscriber);
+  }
+
+  disconnectCurrentToDoGroup() {
+    if(this.currentSocket) {
+      this.currentSocket.close();
+      this.currentSocket = null;
+    }
+  }
 
 }

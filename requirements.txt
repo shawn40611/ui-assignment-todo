@@ -4,3 +4,5 @@ markdown
 django-filter  
 django-hashid-field
 django-decorator-include
+channels
+channels_redis

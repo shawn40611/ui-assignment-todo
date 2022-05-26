@@ -33,6 +33,8 @@
                 <textarea matInput type="textarea" formControlName="detail"></textarea>
             </mat-form-field>
             <p><mat-checkbox formControlName="is_done">Done</mat-checkbox></p>
+
+            <h5 *ngIf="lastModifyAuthor"> modified by {{lastModifyAuthor}}</h5>
             <div fxLayout="row" fxLayoutAlign="space-around center">
                 <button mat-raised-button color="primary" (click)="updateToDo(selectedToDo)">Update</button>
                 <button mat-raised-button color="error">Delete</button>

@@ -16,6 +16,8 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./todo.component.css']
 })
 export class TodoComponent implements OnInit {
+  interval: any|null = null;
+  lastModified = {};
   tabs = [
     "All",
     "Done",
@@ -27,6 +29,7 @@ export class TodoComponent implements OnInit {
     detail: '',
     is_done: false,
   })
+  lastModifyAuthor = '';
   selectedToDo: ToDo|null = null;
   searchParams = {};
 
@@ -79,6 +82,21 @@ export class TodoComponent implements OnInit {
     )
   }
 
+  onReceiveUpdateMessage(message: any) {
+    let data = JSON.parse(message.data);
+    let operation = data.operation;
+    switch(operation) {
+      case 'NEW USER':
+        console.log(data.username);
+        break;
+      case 'UPDATE':
+        this.lastModifyAuthor = data.modified_by;
+        this.updateTodoForm.setValue(data.data);
+        this.lastModified = this.updateTodoForm.value;
+        break;
+    }
+  }
+
   updateSelected(todo: ToDo) {
     this.selectedToDo = todo;
     this.updateTodoForm = this.formBuilder.group({
@@ -86,6 +104,30 @@ export class TodoComponent implements OnInit {
       detail: todo.detail,
       is_done: todo.is_done
     })
+
+    this.lastModified = this.updateTodoForm.value;
+
+    this.api.connectUpdateToDoGroup(todo.id, (event: any) => {
+      this.onReceiveUpdateMessage(event)
+    });
+    this.interval = setInterval(() => {
+      if (this.selectedToDo == null) {
+        if(this.interval)
+          clearInterval(this.interval);
+        return;
+      }
+
+      let formValue = this.updateTodoForm.value;
+      let isDifferent = JSON.stringify(this.lastModified) != JSON.stringify(formValue);
+
+      if(isDifferent) {
+        this.api.sendToDoGroup({
+          'operation': 'UPDATE',
+          'data': formValue 
+        }).subscribe();
+        this.lastModified = formValue
+      }
+    }, 1000)
   }
 
   markAsDone(list: any) {
